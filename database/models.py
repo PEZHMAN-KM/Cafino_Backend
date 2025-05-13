@@ -21,6 +21,7 @@ class User(ID, Base):
 
 
 class Notification(ID, Base):
+    __tablename__ = 'notification'
     table_number = Column(Integer, nullable=False)
     add_time = Column(DateTime, nullable=False)
     message = Column(String, nullable=True)

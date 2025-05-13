@@ -12,6 +12,7 @@ from errors.user_errors import (
     USER_IS_ALREADY_SELLER_ERROR
 )
 from functions.general_functions import check_username_duplicate
+from schemas.user_schemas import UserModel
 
 
 async def get_user_by_username(username: str, db: Session):
@@ -19,5 +20,23 @@ async def get_user_by_username(username: str, db: Session):
 
     if not user:
         raise USER_NOT_FOUND_ERROR
+
+    return user
+
+
+async def create_user(request: UserModel, db: Session):
+    if check_username_duplicate(request.username, db):
+        raise USER_NAME_DUPLICATE_ERROR
+
+
+    user = User(
+        username=request.username,
+        password=Hash.bcrypt(request.password),
+        full_name=request.full_name,
+    )
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
 
     return user

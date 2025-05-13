@@ -158,7 +158,7 @@ def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
         'username': user.username,
         'is_admin': user.is_admin,
         'is_super_admin': user.is_super_admin,
-        'is_seller': user.is_seller
+        'is_waitress': user.is_waitress
     }
 
 

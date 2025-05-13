@@ -3,7 +3,7 @@ from database import models
 from database.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 from authentication import authentication_route
-
+from routers.admin_routers import admin_user
 
 origins = [
     "http://localhost:*",
@@ -25,6 +25,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 app.include_router(authentication_route.router)
+app.include_router(admin_user.router)
 
 
 
