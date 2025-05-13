@@ -13,8 +13,8 @@ class User(ID, Base):
     __tablename__ = "user"
     username = Column(String(150), unique=True, nullable=False)
     password = Column(String(150), nullable=False)
-    phone_number = Column(String(50), unique=True, nullable=True)
+    full_name = Column(String(150), nullable=False)
+    pic_url = Column(String, nullable=True)
     is_admin = Column(Boolean, default=False)
     is_super_admin = Column(Boolean, default=False)
     is_waitress = Column(Boolean, default=False)
-    is_banned = Column(Boolean, default=False)
