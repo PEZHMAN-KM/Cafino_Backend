@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from database import models
 from database.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
+from authentication import authentication_route
 
 
 origins = [
@@ -23,6 +24,9 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
+app.include_router(authentication_route.router)
+
+
 
 Base.metadata.create_all(engine)
 
