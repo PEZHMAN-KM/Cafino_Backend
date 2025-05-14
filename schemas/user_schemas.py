@@ -21,3 +21,10 @@ class UserAuth(BaseSchema):
     id: int
     username: str
     phone_number: str | None = None
+
+
+class UpdateUserModel(BaseSchema):
+    username: str | None = None
+    password: str | None = None
+    full_name: str | None = None
+    pic_url: str | None = None

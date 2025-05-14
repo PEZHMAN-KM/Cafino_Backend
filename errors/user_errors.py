@@ -64,8 +64,8 @@ NO_USER_FOUND_ERROR = HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                     detail='No Matched User Was Found')
 
 
-USER_IS_BANNED_ERROR = HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                                     detail='User Has Been Banned.')
+USER_IS_NOT_WORKING_ERROR = HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                                          detail='User Is Not Working.')
 
 
 USER_PHONE_VERIFICATION_CODE_ERROR = HTTPException(status_code=status.HTTP_404_NOT_FOUND,

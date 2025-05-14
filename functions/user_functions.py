@@ -12,7 +12,7 @@ from errors.user_errors import (
     USER_IS_ALREADY_SELLER_ERROR
 )
 from functions.general_functions import check_username_duplicate
-from schemas.user_schemas import UserModel
+from schemas.user_schemas import UserModel, UpdateUserModel
 
 
 async def get_user_by_username(username: str, db: Session):
@@ -40,3 +40,60 @@ async def create_user(request: UserModel, db: Session):
     db.refresh(user)
 
     return user
+
+
+async def create_admin(request: UserModel, db: Session):
+    ...
+
+
+
+
+
+async def create_waitress(request: UserModel, db: Session):
+    ...
+
+
+async def update_user(reques: UpdateUserModel, db: Session):
+    ...
+
+async def update_self_waitress(reques: UpdateUserModel, db: Session):
+    ...
+
+async def update_self_admin(request:UpdateUserModel , db: Session):
+    ...
+
+
+async def update_user_super_admin(request: UpdateUserModel, db: Session):
+    ...
+
+
+async def delete_user(user_id: int, db: Session):
+    ...
+
+
+async def unemploy_user(user_id: int, db: Session):
+    ...
+
+
+async def waitress_self_unemplyment(user_id: int, db: Session):
+    ...
+
+
+async def admin_unemploy_user(user_id: int, db: Session):
+    ...
+
+
+async def super_admin_unemploy_user(user_id: int, db: Session):
+    ...
+
+
+async def get_all_waitresses(db: Session):
+    ...
+
+
+async def get_all_users(db: Session):
+    ...
+
+
+async def get_self_info(user_id: int, db: Session):
+    ...

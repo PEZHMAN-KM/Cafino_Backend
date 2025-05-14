@@ -18,6 +18,7 @@ class User(ID, Base):
     is_admin = Column(Boolean, default=False)
     is_super_admin = Column(Boolean, default=False)
     is_waitress = Column(Boolean, default=False)
+    is_working = Column(Boolean, default=True)
 
 
 class Notification(ID, Base):
