@@ -28,3 +28,7 @@ class UpdateUserModel(BaseSchema):
     password: str | None = None
     full_name: str | None = None
     pic_url: str | None = None
+
+
+class AdminUpdateModel(UpdateUserModel):
+    user_id: int
