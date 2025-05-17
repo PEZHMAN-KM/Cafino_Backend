@@ -33,7 +33,7 @@ async def create_user(request: UserModel, db: Session):
     user = User(
         username=request.username,
         password=Hash.bcrypt(request.password),
-        full_name=request.full_name,
+        full_name=request.full_name if request.full_name else None,
     )
 
     db.add(user)
@@ -59,10 +59,6 @@ async def create_admin(request: UserModel, db: Session):
     db.refresh(user)
 
     return user
-
-
-
-
 
 
 async def create_waitress(request: UserModel, db: Session):
