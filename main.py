@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from database import models
+from fastapi.staticfiles import StaticFiles
 from database.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 from authentication import authentication_route
@@ -11,6 +12,8 @@ origins = [
     "http://localhost:5174",
     "http://127.0.0.1:8000"
 ]
+
+
 
 app = FastAPI(
     title="Cafino",
@@ -28,6 +31,10 @@ app.include_router(authentication_route.router)
 app.include_router(admin_user.router)
 
 
+
+
+
+app.mount('/files', StaticFiles(directory='pictures'), name='files')
 
 Base.metadata.create_all(engine)
 
