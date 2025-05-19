@@ -1,9 +1,10 @@
 import datetime
 
-from database.models import Notification
+from database.models import Notification, User
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from errors.notification_errors import NOTIFICATION_NOT_FOUND_ERROR, NO_NOTIFICATION_FOUND_ERROR
+from errors.user_errors import USER_NOT_FOUND_ERROR
 from schemas.notification_schemas import AddNotificationModel, GetNotifInProgress
 
 
@@ -28,8 +29,14 @@ async def get_notif_in_progress(request: GetNotifInProgress, db: Session):
     if not notif:
         raise NOTIFICATION_NOT_FOUND_ERROR
 
+    waitress = db.query(User).filter(and_(User.id == request.waitress_id, User.is_waitress == True)).first()
+
+    if not waitress:
+        raise USER_NOT_FOUND_ERROR
+
     notif.in_progress = True
     notif.waitress_id = request.waitress_id
+    notif.waitress_name = waitress.full_name
     notif.start_progress_time = datetime.datetime.now()
     db.commit()
 
@@ -46,6 +53,7 @@ async def get_out_of_progress(notif_id: int, db: Session):
 
     notif.in_progress = False
     notif.waitress_id = None
+    notif.waitress_name = None
     notif.start_progress_time = None
     db.commit()
 

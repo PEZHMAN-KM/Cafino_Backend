@@ -30,5 +30,5 @@ class FoodDisplay(AddFoodModel):
 
 
 class ShowFoodsOfCategory(BaseSchema):
-    on_sale_food: list[FoodDisplay]
-    not_on_sale_food: list[FoodDisplay]
+    on_sale_food: list[FoodDisplay] | None = None
+    not_on_sale_food: list[FoodDisplay] | None = None

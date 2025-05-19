@@ -23,5 +23,5 @@ class NotificationDisplay(AddNotificationModel):
 
 
 class ShowNotifications(BaseSchema):
-    in_progress_notifs: list[NotificationDisplay]
-    requested_notifs: list[NotificationDisplay]
+    in_progress_notifs: list[NotificationDisplay] | None = None
+    requested_notifs: list[NotificationDisplay] | None = None
