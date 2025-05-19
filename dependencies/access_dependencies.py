@@ -5,12 +5,12 @@ from fastapi import Depends
 
 
 USER_DEPENDENCY = Annotated[UserAuth, Depends(get_current_user)]
-SELLER_DEPENDENCY = Annotated[UserAuth, Depends(get_current_waitress)]
+WAITRESS_DEPENDENCY = Annotated[UserAuth, Depends(get_current_waitress)]
 ADMIN_DEPENDENCY = Annotated[UserAuth, Depends(get_current_admin)]
 SUPER_ADMIN_DEPENDENCY = Annotated[UserAuth, Depends(get_current_super_admin)]
 
 
 ROUTER_USER_DEPENDENCY = Depends(get_current_user)
-ROUTER_SELLER_DEPENDENCY = Depends(get_current_waitress)
+ROUTER_WAITRESS_DEPENDENCY = Depends(get_current_waitress)
 ROUTER_ADMIN_DEPENDENCY = Depends(get_current_admin)
 ROUTER_SUPER_ADMIN_DEPENDENCY = Depends(get_current_super_admin)

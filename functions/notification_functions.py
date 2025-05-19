@@ -4,7 +4,7 @@ from database.models import Notification, User
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from errors.notification_errors import NOTIFICATION_NOT_FOUND_ERROR, NO_NOTIFICATION_FOUND_ERROR
-from errors.user_errors import USER_NOT_FOUND_ERROR
+from errors.user_errors import USER_NOT_FOUND_ERROR, PROTECTED_ERROR
 from schemas.notification_schemas import AddNotificationModel, GetNotifInProgress
 
 
@@ -23,19 +23,17 @@ async def add_notif(notif: AddNotificationModel, db: Session):
     return new_notif
 
 
-async def get_notif_in_progress(request: GetNotifInProgress, db: Session):
-    notif = db.query(Notification).filter(Notification.id == request.notif_id).first()
+async def get_notif_in_progress(notif_id: int, waitress_id: int, db: Session):
+    notif = db.query(Notification).filter(Notification.id == notif_id).first()
 
     if not notif:
         raise NOTIFICATION_NOT_FOUND_ERROR
 
-    waitress = db.query(User).filter(and_(User.id == request.waitress_id, User.is_waitress == True)).first()
+    waitress = db.query(User).filter(and_(User.id == waitress_id, User.is_waitress == True)).first()
 
-    if not waitress:
-        raise USER_NOT_FOUND_ERROR
 
     notif.in_progress = True
-    notif.waitress_id = request.waitress_id
+    notif.waitress_id = waitress_id
     notif.waitress_name = waitress.full_name
     notif.start_progress_time = datetime.datetime.now()
     db.commit()
@@ -45,11 +43,17 @@ async def get_notif_in_progress(request: GetNotifInProgress, db: Session):
 
 
 
-async def get_out_of_progress(notif_id: int, db: Session):
+async def get_out_of_progress(notif_id: int, user_id: int, db: Session):
     notif = db.query(Notification).filter(Notification.id == notif_id).first()
 
     if not notif:
         raise NOTIFICATION_NOT_FOUND_ERROR
+
+
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user.is_admin or user_id != notif.waitress_id:
+        raise PROTECTED_ERROR
 
     notif.in_progress = False
     notif.waitress_id = None
