@@ -3,7 +3,15 @@ from fastapi.staticfiles import StaticFiles
 from database.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 from authentication import authentication_route
-from routers.super_admin_routers import super_admin_super_admin
+from routers.general_routers import user, food, order, notification, category
+from routers.waitress_routers import waitress_notification
+from routers.admin_routers import admin_food, admin_order, admin_waitress
+from routers.super_admin_routers import (
+    super_admin_super_admin,
+    super_admin_user,
+    super_admin_category,
+    super_admin_admin
+)
 
 origins = [
     "http://localhost:*",
@@ -26,8 +34,21 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
+app.include_router(user.router)
+app.include_router(food.router)
+app.include_router(order.router)
+app.include_router(notification.router)
+app.include_router(category.router)
+app.include_router(waitress_notification.router)
+app.include_router(admin_food.router)
+app.include_router(admin_order.router)
+app.include_router(admin_waitress.router)
+app.include_router(super_admin_super_admin.router)
+app.include_router(super_admin_user.router)
+app.include_router(super_admin_category.router)
+app.include_router(super_admin_admin.router)
 app.include_router(authentication_route.router)
-app.include_router(admin_user.router)
+
 
 
 
