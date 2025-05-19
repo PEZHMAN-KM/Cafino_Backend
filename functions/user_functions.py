@@ -1,3 +1,8 @@
+import os
+import random
+import shutil
+from string import ascii_letters
+from fastapi import UploadFile
 from database.models import User, Order, Notification
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
@@ -81,6 +86,52 @@ async def create_waitress(request: UserModel, db: Session):
     return user
 
 
+async def update_user_pic(user_id: int, pic: UploadFile, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    old_pic_url: str | None = None
+
+    if user.pic_url:
+        old_pic_url = user.pic_url
+
+    rand_str = ''.join(random.choice(ascii_letters) for _ in range(10))
+    new_name = f'_{rand_str}.'.join(pic.filename.rsplit('.', 1))
+    path_file = f'pictures/{new_name}'
+
+    with open(path_file, 'w+b') as buffer:
+        shutil.copyfileobj(pic.file, buffer)
+
+    user.pic_url = path_file
+
+    if old_pic_url:
+        os.remove(old_pic_url)
+
+
+    db.commit()
+
+    return user
+
+
+async def delete_user_pic(user_id: int, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    if user.pic_url:
+        os.remove(user.pic_url)
+        user.pic_url = None
+
+    db.commit()
+
+    return user
+
+
+
+
 
 async def update_self_user(request: UpdateUserModel, user_id: int, db: Session):
     user = db.query(User).filter(User.id == user_id).first()
@@ -102,7 +153,8 @@ async def update_self_user(request: UpdateUserModel, user_id: int, db: Session):
 
     return user
     
-    
+
+
 
 async def update_by_admin(request: AdminUpdateModel, db: Session):
     user = db.query(User).filter(User.id == request.user_id).first()
