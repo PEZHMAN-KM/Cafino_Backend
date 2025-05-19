@@ -25,7 +25,7 @@ async def get_user_by_username(username: str, db: Session):
     return user
 
 
-async def create_user(request: UserModel, db: Session):
+async def create_super_admin(request: UserModel, db: Session):
     if check_username_duplicate(request.username, db):
         raise USER_NAME_DUPLICATE_ERROR
 
@@ -34,6 +34,8 @@ async def create_user(request: UserModel, db: Session):
         username=request.username,
         password=Hash.bcrypt(request.password),
         full_name=request.full_name if request.full_name else None,
+        is_admin=True,
+        is_super_admin=True
     )
 
     db.add(user)

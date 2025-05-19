@@ -1,10 +1,9 @@
 from fastapi import FastAPI
-from database import models
 from fastapi.staticfiles import StaticFiles
 from database.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 from authentication import authentication_route
-from routers.admin_routers import admin_user
+from routers.super_admin_routers import super_admin_super_admin
 
 origins = [
     "http://localhost:*",
