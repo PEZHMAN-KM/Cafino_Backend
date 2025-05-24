@@ -304,3 +304,15 @@ async def get_user(user_id: int, db: Session):
         raise USER_NOT_FOUND_ERROR
 
     return user
+
+
+async def get_user_pic(user_id: int, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    pic = user.pic_url if user.pic_url else None
+
+
+    return pic
