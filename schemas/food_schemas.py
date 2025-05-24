@@ -26,6 +26,7 @@ class CategoryOnSale(BaseSchema):
 
 
 class FoodDisplay(AddFoodModel):
+    id: int
     pic_url: str | None
 
 
