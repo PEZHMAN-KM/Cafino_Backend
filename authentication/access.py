@@ -1,5 +1,6 @@
 from functions.user_functions import get_user_by_username
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
 from errors.user_errors import (
     ERROR_CREDENTIAL,
     PROTECTED_ERROR,
@@ -23,6 +24,7 @@ import os
 
 SECRET_KEY = '45a44aa57199adf01520591dfa068a15ede3562e844b9f8d41fc5bd84ff85d3b'
 ALGORITHM = 'HS256'
+# ACCESS_TOKEN_EXPIRE_MINUTS = 1
 ACCESS_TOKEN_EXPIRE_DAYS = 3
 REFRESH_TOKEN_EXPIRE_DAYS = 30
 
@@ -151,7 +153,7 @@ async def get_current_super_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
     return user
 
 
-def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
+async def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
     user = db.query(User).filter(User.username == request.username).first()
     if not user:
         raise INVALID_USER_ERROR
@@ -168,6 +170,7 @@ def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
         'type_token': 'bearer',
         'userID': user.id,
         'username': user.username,
+        # 'full_name' : user.full_name,
         'is_admin': user.is_admin,
         'is_super_admin': user.is_super_admin,
         'is_waitress': user.is_waitress,
@@ -175,7 +178,7 @@ def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
     }
 
 
-def get_new_access_token(token: TOKEN_DEPENDENCY):
+async def get_new_access_token(token: TOKEN_DEPENDENCY, db: Session):
     try:
         _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
         refresh = _dict.get('refresh')
@@ -195,8 +198,19 @@ def get_new_access_token(token: TOKEN_DEPENDENCY):
 
         new_access_token = create_token(data={'sub': username})
 
+        user = await get_user_by_username(username=username, db=db)
+        print(user)
+
         return JSONResponse(content={
             'access_token': new_access_token,
+            'type_token': 'bearer',
+            'userID': user.id,
+            'username': user.username,
+            # 'full_name' : user.full_name,
+            'is_admin': user.is_admin,
+            'is_super_admin': user.is_super_admin,
+            'is_waitress': user.is_waitress,
+            'is_working': user.is_working
         })
 
     except:
