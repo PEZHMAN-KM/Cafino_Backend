@@ -1,6 +1,7 @@
 import os
 import random
 import shutil
+from fastapi.responses import FileResponse
 from string import ascii_letters
 from fastapi import UploadFile
 from database.models import User, Order, Notification
@@ -15,7 +16,8 @@ from errors.user_errors import (
     NO_USER_FOUND_ERROR,
     DONT_HAVE_ACCESS_ADMIN_ERROR,
     USER_IS_ALREADY_SELLER_ERROR,
-    USER_UPDATE_ACCESS_ERROR
+    USER_UPDATE_ACCESS_ERROR,
+    PIC_NOT_FOUND_ERROR
 )
 from functions.general_functions import check_username_duplicate
 from schemas.user_schemas import UserModel, UpdateUserModel, AdminUpdateModel
@@ -312,7 +314,9 @@ async def get_user_pic(user_id: int, db: Session):
     if not user:
         raise USER_NOT_FOUND_ERROR
 
-    pic = user.pic_url if user.pic_url else None
+    pic = user.pic_url
 
+    if not pic:
+        raise PIC_NOT_FOUND_ERROR
 
-    return pic
+    return FileResponse(path=pic)

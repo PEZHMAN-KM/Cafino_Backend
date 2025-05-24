@@ -2,8 +2,10 @@ from database.models import Food
 from sqlalchemy.orm import Session
 from fastapi import UploadFile
 from sqlalchemy import delete, and_
+from fastapi.responses import FileResponse
 from errors.food_errors import NO_FOOD_FOUND_ERROR, FOOD_NOT_FOUND_ERROR
 from schemas.food_schemas import AddFoodModel, UpdateFoodModel, CategoryOnSale
+from errors.user_errors import PIC_NOT_FOUND_ERROR
 import random
 import shutil
 from string import ascii_letters
@@ -180,3 +182,16 @@ async def get_food_list_by_id(id_list: list[int], db: Session):
 
     return foods
 
+
+async def get_food_pic(food_id: int, db: Session):
+    food = db.query(Food).filter(Food.id == food_id).first()
+
+    if not food:
+        raise FOOD_NOT_FOUND_ERROR
+
+    pic = food.pic_url
+
+    if not pic:
+        raise PIC_NOT_FOUND_ERROR
+
+    return FileResponse(path=pic)

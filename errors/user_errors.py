@@ -97,3 +97,6 @@ USER_ALREADY_HAS_STORE = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABL
 
 USER_UPDATE_ACCESS_ERROR = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
                                          detail="You Can Not Change Other Admin's Info.")
+
+PIC_NOT_FOUND_ERROR = HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                    detail='Picture Not Found')

@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from functions import food_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
+from fastapi.responses import FileResponse
 from schemas.food_schemas import FoodDisplay, ShowFoodsOfCategory
 
 
@@ -44,3 +45,8 @@ async def search_food(search: str, db: DB_DEPENDENCY):
 @router.post('/get_food_list_by_id', status_code=200, response_model=list[FoodDisplay])
 async def get_food_list_by_id(id_list: list[int], db: DB_DEPENDENCY):
     return await food_functions.get_food_list_by_id(id_list=id_list, db=db)
+
+
+@router.post('/get_food_picture', status_code=200, response_class=FileResponse)
+async def get_food_pic(food_id: ID_BODY, db: DB_DEPENDENCY):
+    return await food_functions.get_food_pic(food_id=food_id, db=db)
