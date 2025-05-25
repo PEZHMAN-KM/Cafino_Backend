@@ -50,6 +50,7 @@ class Food(ID, Base):
     in_sale = Column(Boolean, default=False)
     sale_price = Column(Integer, nullable=True)
     category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
+    category_name = Column(String, nullable=False)
     pic_url = Column(String, nullable=True)
 
 

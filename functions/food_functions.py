@@ -1,4 +1,4 @@
-from database.models import Food
+from database.models import Food, Category
 from sqlalchemy.orm import Session
 from fastapi import UploadFile
 from sqlalchemy import delete, and_
@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from errors.food_errors import NO_FOOD_FOUND_ERROR, FOOD_NOT_FOUND_ERROR
 from schemas.food_schemas import AddFoodModel, UpdateFoodModel, CategoryOnSale
 from errors.user_errors import PIC_NOT_FOUND_ERROR
+from errors.category_errors import CATEGORY_NOT_FOUND_ERROR
 import random
 import shutil
 from string import ascii_letters
@@ -14,11 +15,19 @@ import os
 
 
 async def add_food(request: AddFoodModel, db: Session, pic: UploadFile | None = None):
+    category = db.query(Category).filter(Category.id == request.category_id).first()
+
+    if not category:
+        raise CATEGORY_NOT_FOUND_ERROR
+    
     food = Food(
         name=request.name,
         price=request.price,
         description=request.description,
         category_id=request.category_id,
+        category_name=category.name,
+        in_sale=request.in_sale if request.in_sale else None,
+        sale_price=request.sale_price if request.sale_price else None,
     )
 
     db.add(food)
@@ -40,7 +49,7 @@ async def add_food(request: AddFoodModel, db: Session, pic: UploadFile | None = 
 
 
 async def update_food(request: UpdateFoodModel, db: Session):
-    food = db.query(Food).filter(Food.id == request.food_id).first()
+    food = db.query(Food).join(C).filter(Food.id == request.food_id).first()
 
     if not food:
         raise FOOD_NOT_FOUND_ERROR
@@ -151,8 +160,8 @@ async def get_all_not_on_sale_foods_of_category(category_id: int, db: Session):
 
 
 async def show_category_foods(category_id: int, db: Session):
-    on_sale_foods = get_all_on_sale_foods_of_category(category_id, db)
-    not_on_sale_foods = get_all_not_on_sale_foods_of_category(category_id, db)
+    on_sale_foods = await get_all_on_sale_foods_of_category(category_id, db)
+    not_on_sale_foods = await get_all_not_on_sale_foods_of_category(category_id, db)
 
     category_foods_display = {
         'on_sale_food': on_sale_foods,

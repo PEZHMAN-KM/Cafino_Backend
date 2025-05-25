@@ -22,7 +22,7 @@ async def get_all_foods(db: DB_DEPENDENCY):
     return await food_functions.get_all_foods(db=db)
 
 
-@router.post('/get_foods_of_category', status_code=200, response_model=list[ShowFoodsOfCategory])
+@router.post('/get_foods_of_category', status_code=200, response_model=list[FoodDisplay])
 async def get_foods_of_category(category_id: ID_BODY, db: DB_DEPENDENCY):
     return await food_functions.get_foods_of_category(category_id=category_id, db=db)
 
