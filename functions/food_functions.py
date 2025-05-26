@@ -62,7 +62,7 @@ async def update_food(request: UpdateFoodModel, db: Session):
         food.description = request.description
     if request.category_id:
         food.category_id = request.category_id
-        category = db.query(Category).filter(Category.id == request.category_id)
+        category = db.query(Category).filter(Category.id == request.category_id).first()
         food.category_name = category.name
     if request.in_sale:
         food.in_sale = request.in_sale

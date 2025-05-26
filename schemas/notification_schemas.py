@@ -13,6 +13,7 @@ class GetNotifInProgress(BaseSchema):
     notif_id: int
 
 class NotificationDisplay(AddNotificationModel):
+    id : int
     add_time: datetime.datetime
     is_in_progress: bool
     start_progress_time: datetime.datetime | None = None
