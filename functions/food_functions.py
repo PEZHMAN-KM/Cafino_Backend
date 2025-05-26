@@ -49,7 +49,7 @@ async def add_food(request: AddFoodModel, db: Session, pic: UploadFile | None = 
 
 
 async def update_food(request: UpdateFoodModel, db: Session):
-    food = db.query(Food).join(C).filter(Food.id == request.food_id).first()
+    food = db.query(Food).filter(Food.id == request.food_id).first()
 
     if not food:
         raise FOOD_NOT_FOUND_ERROR
@@ -62,6 +62,8 @@ async def update_food(request: UpdateFoodModel, db: Session):
         food.description = request.description
     if request.category_id:
         food.category_id = request.category_id
+        category = db.query(Category).filter(Category.id == request.category_id)
+        food.category_name = category.name
     if request.in_sale:
         food.in_sale = request.in_sale
     if request.sale_price:

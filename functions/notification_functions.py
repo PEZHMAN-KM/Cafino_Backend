@@ -90,8 +90,8 @@ async def get_all_in_progress_notifs(db: Session):
 
 
 async def get_notifs_to_show(db: Session):
-    in_progress_notifs = get_all_in_progress_notifs(db)
-    requested_notifs = get_all_requested_notifs(db)
+    in_progress_notifs = await get_all_in_progress_notifs(db)
+    requested_notifs = await get_all_requested_notifs(db)
 
     if not in_progress_notifs and not requested_notifs:
         raise NO_NOTIFICATION_FOUND_ERROR

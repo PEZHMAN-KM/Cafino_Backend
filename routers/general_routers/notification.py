@@ -3,7 +3,7 @@ from functions import notification_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
 from dependencies.access_dependencies import USER_DEPENDENCY
-from schemas.notification_schemas import NotificationDisplay, AddNotificationModel
+from schemas.notification_schemas import NotificationDisplay, AddNotificationModel, ShowNotifications
 
 
 router = APIRouter(
@@ -22,7 +22,7 @@ async def get_out_of_progress(notif_id: ID_BODY, db: DB_DEPENDENCY, user: USER_D
     return await notification_functions.get_out_of_progress(notif_id=notif_id, user_id=user.id, db=db)
 
 
-@router.get('/get_notifs_to_show', status_code=200, response_model=list[NotificationDisplay])
+@router.get('/get_notifs_to_show', status_code=200, response_model=ShowNotifications)
 async def get_notifs_to_show(db: DB_DEPENDENCY):
     return await notification_functions.get_notifs_to_show(db=db)
 
