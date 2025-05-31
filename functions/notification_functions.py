@@ -35,7 +35,7 @@ async def get_notif_in_progress(notif_id: int, waitress_id: int, db: Session):
 
     waitress = db.query(User).filter(and_(User.id == waitress_id, User.is_waitress == True)).first()
 
-    notif.in_progress = True
+    notif.is_in_progress = True
     notif.waitress_id = waitress_id
     notif.waitress_name = waitress.full_name
     notif.start_progress_time = datetime.datetime.now()
@@ -70,7 +70,7 @@ async def get_notif_done(notif_id: int, waitress_id: int, db: Session):
     if not notif:
         raise NOTIFICATION_NOT_FOUND_ERROR
 
-    if not notif.in_progress:
+    if not notif.is_in_progress:
         raise NOTIFICATION_IS_NOT_IN_PROGRESS
 
     if waitress_id != notif.waitress_id:
