@@ -52,10 +52,10 @@ async def get_out_of_progress(notif_id: int, user_id: int, db: Session):
 
     user = db.query(User).filter(User.id == user_id).first()
 
-    if not user.is_admin or user_id != notif.waitress_id:
+    if (not user.is_admin) and (user_id != notif.waitress_id):
         raise PROTECTED_ERROR
 
-    notif.in_progress = False
+    notif.is_in_progress = False
     notif.waitress_id = None
     notif.waitress_name = None
     notif.start_progress_time = None
