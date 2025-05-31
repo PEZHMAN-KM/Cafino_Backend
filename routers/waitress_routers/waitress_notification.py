@@ -19,5 +19,5 @@ async def get_notif_in_progress(notif_id: ID_BODY, db: DB_DEPENDENCY, user: WAIT
 
 
 @router.put('/get_notif_done', status_code=200, response_model=NotificationDisplay)
-async def get_notif_done(notif_id: ID_BODY, db: DB_DEPENDENCY):
-    return await notification_functions.get_notif_done(notif_id=notif_id, db=db)
+async def get_notif_done(notif_id: ID_BODY, waitress: WAITRESS_DEPENDENCY, db: DB_DEPENDENCY):
+    return await notification_functions.get_notif_done(notif_id=notif_id, waitress_id=waitress.id, db=db)
