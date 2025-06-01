@@ -8,7 +8,6 @@ from schemas.food_schemas import FoodDisplay
 class OrderFoodModel(BaseSchema):
     food_id: int
     quantity: int
-    food_price: int
 
 
 class AddOrderModel(BaseSchema):

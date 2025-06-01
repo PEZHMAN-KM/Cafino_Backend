@@ -15,25 +15,29 @@ async def add_order(request: AddOrderModel, db: Session):
     )
 
     db.add(order)
+    db.flush()
+    db.refresh(order)
 
     total_price = 0
 
     order_foods = []
 
-    for food in request.foods:
+    for this_food in request.foods:
+        food = db.query(Food).filter(Food.id == this_food.food_id).first()
         order_food = OrderFood(
             order_id=order.id,
-            food_id=food.food_id,
-            quantity=food.quantity,
-            food_price=food.food_price
+            food_id=food.id,
+            quantity=this_food.quantity,
+            food_price=food.sale_price if food.in_sale else food.price
         )
         db.add(order_food)
+        db.flush()
+        db.refresh(order_food)
 
-        total_price = total_price + (food.quantity * food.food_price)
-        this_food = db.query(Food).filter(Food.id == food.food_id).first()
+        total_price = total_price + (this_food.quantity * order_food.food_price)
 
-        this_food.quantity = food.quantity
-        order_foods.append(this_food)
+        food.quantity = this_food.quantity
+        order_foods.append(food)
 
 
     order.total_price = total_price
