@@ -22,6 +22,6 @@ async def get_order(order_id: ID_BODY, db: DB_DEPENDENCY):
     return await order_functions.get_order(order_id=order_id, db=db)
 
 
-@router.get('/get_orders_to_show', status_code=200, response_model=list[OrdersToShow])
+@router.get('/get_orders_to_show', status_code=200, response_model=OrdersToShow)
 async def get_orders_to_show(db: DB_DEPENDENCY):
     return await order_functions.get_orders_to_show(db=db)
