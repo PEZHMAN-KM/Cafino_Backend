@@ -23,4 +23,9 @@ async def accept_order(order_id: ID_BODY, admin: ADMIN_DEPENDENCY, db: DB_DEPEND
     return await order_functions.accept_order(order_id=order_id, admin_id=admin.id, db=db)
 
 
+@router.put('/get_order_done', status_code=200, response_model=OrderShowDisplay)
+async def get_order_done(order_id: ID_BODY, db: DB_DEPENDENCY):
+    return await order_functions.get_order_done(order_id=order_id, db=db)
+
+
 
