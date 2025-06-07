@@ -236,6 +236,19 @@ async def admin_unemploy_user(user_id: int, db: Session):
     if user.is_admin:
         raise USER_UPDATE_ACCESS_ERROR
 
+
+    waitress_in_progress_notifs = db.query(Notification).filter(and_(Notification.waitress_id == user_id, Notification.is_in_progress == True, Notification.is_done == False)).all()
+
+    if waitress_in_progress_notifs:
+        for notif in waitress_in_progress_notifs:
+            notif.is_in_progress = False
+            notif.waitress_id = None
+            notif.waitress_name = None
+            notif.start_progress_time = None
+
+            db.flush()
+
+
     user.is_working = False
     db.commit()
     db.refresh(user)
@@ -249,6 +262,31 @@ async def super_admin_unemploy_user(user_id: int, db: Session):
     if not user:
         raise USER_NOT_FOUND_ERROR
 
+
+    if user.is_waitress:
+        waitress_in_progress_notifs = db.query(Notification).filter(and_(Notification.waitress_id == user_id, Notification.is_in_progress == True, Notification.is_done == False)).all()
+        if waitress_in_progress_notifs:
+            for notif in waitress_in_progress_notifs:
+                notif.is_in_progress = False
+                notif.waitress_id = None
+                notif.waitress_name = None
+                notif.start_progress_time = None
+
+                db.flush()
+
+
+    if user.is_admin:
+        admin_in_progress_orders = db.query(Order).filter(and_(Order.admin_id == user_id, Order.is_in_progress == True, Order.is_done == False)).all()
+        if admin_in_progress_orders:
+            for order in admin_in_progress_orders:
+                order.is_in_progress = False
+                order.admin_id = None
+                order.admin_name = None
+                order.start_progress_time = None
+
+                db.flush()
+
+
     user.is_working = False
     db.commit()
     db.refresh(user)
@@ -261,6 +299,30 @@ async def self_unemplyment(user_id: int, db: Session):
 
     if not user:
         raise USER_NOT_FOUND_ERROR
+
+
+    if user.is_waitress:
+        waitress_in_progress_notifs = db.query(Notification).filter(and_(Notification.waitress_id == user_id, Notification.is_in_progress == True, Notification.is_done == False)).all()
+        if waitress_in_progress_notifs:
+            for notif in waitress_in_progress_notifs:
+                notif.is_in_progress = False
+                notif.waitress_id = None
+                notif.waitress_name = None
+                notif.start_progress_time = None
+
+                db.flush()
+
+
+    if user.is_admin:
+        admin_in_progress_orders = db.query(Order).filter(and_(Order.admin_id == user_id, Order.is_in_progress == True, Order.is_done == False)).all()
+        if admin_in_progress_orders:
+            for order in admin_in_progress_orders:
+                order.is_in_progress = False
+                order.admin_id = None
+                order.admin_name = None
+                order.start_progress_time = None
+
+                db.flush()
 
     user.is_working = False
     db.commit()
