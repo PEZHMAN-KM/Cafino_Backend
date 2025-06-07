@@ -7,8 +7,8 @@ from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY, ADMIN_DEPE
 
 
 router = APIRouter(
-    prefix='/admin/notification',
-    tags=['Admin Notification'],
+    prefix='/admin/order',
+    tags=['Admin Order'],
     dependencies=[ROUTER_ADMIN_DEPENDENCY]
 )
 
@@ -18,12 +18,12 @@ async def deny_order(order_id: ID_BODY, db: DB_DEPENDENCY):
     return await order_functions.deny_order(order_id=order_id, db=db)
 
 
-@router.put('/accept_order', status_code=200, response_model=OrderShowDisplay)
+@router.put('/accept_order', status_code=200)
 async def accept_order(order_id: ID_BODY, admin: ADMIN_DEPENDENCY, db: DB_DEPENDENCY):
     return await order_functions.accept_order(order_id=order_id, admin_id=admin.id, db=db)
 
 
-@router.put('/get_order_done', status_code=200, response_model=OrderShowDisplay)
+@router.put('/get_order_done', status_code=200)
 async def get_order_done(order_id: ID_BODY, db: DB_DEPENDENCY):
     return await order_functions.get_order_done(order_id=order_id, db=db)
 
