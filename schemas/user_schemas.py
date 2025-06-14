@@ -2,6 +2,7 @@ from schemas.base_schemas import BaseSchema
 
 
 class UserDisplay(BaseSchema):
+    id: int
     username: str
     full_name: str
     pic_url: str | None = None

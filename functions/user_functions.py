@@ -333,7 +333,7 @@ async def self_unemplyment(user_id: int, db: Session):
 
 
 async def get_all_waitresses(db: Session):
-    waitresses = db.query(User).filter(User.is_waitress == True).all()
+    waitresses = db.query(User).filter(and_(User.is_waitress == True, User.is_working == True)).all()
 
     if not waitresses:
         raise NO_USER_FOUND_ERROR
